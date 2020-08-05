@@ -35,31 +35,3 @@ def platform2pymarc_obj(data=None):
             )
             record.add_field(field)
     return record
-
-
-def get_locations(bib=None):
-    """
-    extracts meta from Platform results
-    args:
-        results (json format)
-    return:
-        list of inhouse bibs meta
-    """
-    if bib is not None:
-        locations = [x.get("code") for x in bib.get("locations")]
-        return locations
-    else:
-        return
-
-
-def get_bibNo(bib=None):
-    if bib is not None:
-        bid = bib.get("id")
-        return bid
-    else:
-        return
-
-
-def get_rec_type(bib=None):
-    if bib is not None:
-        pass

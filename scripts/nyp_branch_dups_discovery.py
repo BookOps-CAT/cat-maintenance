@@ -26,13 +26,18 @@ from logging.handlers import RotatingFileHandler
 
 from pymarc import MARCReader
 
-from crosswalks import get_locations, platform2pymarc_obj, get_bibNo
+from patform_bib_parser import (
+    get_locations,
+    get_bibNo,
+    get_rec_type,
+    get_blvl,
+    get_isbns,
+    get_item_form,
+)
 from platform import AuthorizeAccess, PlatformSession, platform_status_interpreter
 
 
 # set up logger
-
-
 log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(filename)s:%(lineno)d"
 log_console_format = "[%(levelname)s]: %(message)s"
 
@@ -131,16 +136,29 @@ def marc2list(src, dst):
                 save2csv(dst, [bibNo, isbns])
 
 
+def is_ebook(rec_type, blvl, item_form):
+    if rec_type == "a" and blvl == "m" and item_form == "o":
+        return True
+
+
 def produce_report(dst, matched_records):
     # reject bibs with call number issues
     # reject mixed and research bibs
     branch_matches = []
     matched_bids = []
+    ebooks = []
     for record in matched_records:
         bid = get_bibNo(record)
-        rec_type = get_rec_typ(record)
+        rec_type = get_rec_type(record)
         blvl = get_blvl(record)
         item_form = get_item_form(record)
+        isbns = get_isbns(record)
+
+        # check if ebook and save for separate report
+        if is_ebook(rec_type, blvl, item_form):
+            logger.info(f"Identified ebook: bid: b{bid}a , isbns={isbns}")
+            ebooks.append([bid, ",".join(isbns)])
+
         if not is_valid_bib_type(rec_type, blvl, item_form):
             logger.info(f"Rejecting invalid item format bib b{bid}a")
         elif not has_research_callnum(record):
@@ -154,10 +172,6 @@ def produce_report(dst, matched_records):
     if len(branch_matches) > 1:
         ord_matched_bids = sorted(matched_bids)
         logger.debug(f"Ordered matches: {ord_matched_bids}")
-
-
-
-
 
     # save2csv(dst, [dup_bids, dst_bid, status])
 
