@@ -106,6 +106,23 @@ def has_oclc_number(bib):
     return has_number
 
 
+def has_lc_number(bib):
+    has_number = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "010":
+                has_number = True
+    return has_number
+
+
+def get_timestamp(bib):
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "005":
+                return float(field.get("content"))
+            else:
+                return 0.0
+
 
 def get_normalized_title(bib):
     if bib is not None:
@@ -114,12 +131,12 @@ def get_normalized_title(bib):
 
 def is_marked_for_deletion(bib):
     if bib is not None:
-        code = bib.get("31").get("value")
-        if code == "d":
-            return True
-        else:
-            return False
-
+        for code, field in bib["fixedFields"].items():
+            if code == "31":
+                if field["value"] == "d":
+                    return True
+                else:
+                    return False
 
 
 if __name__ == "__main__":
@@ -128,4 +145,4 @@ if __name__ == "__main__":
     fh = ".\\files\\plat_response.json"
     with open(fh, "r") as file:
         data = json.load(file)
-        leader = print(get_leader(data))
+        print(is_marked_for_deletion(data))

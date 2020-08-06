@@ -24,21 +24,29 @@ import json
 import logging
 from logging.handlers import RotatingFileHandler
 
-from pymarc import MARCReader
 
-from patform_bib_parser import (
+from platform_bib_parser import (
     get_locations,
     get_bibNo,
     get_rec_type,
     get_blvl,
     get_isbns,
     get_item_form,
+    has_research_call_number,
+    get_branch_call_number,
+    has_call_number,
+    get_normalized_title,
+    is_marked_for_deletion,
+    has_oclc_number,
+    has_lc_number,
+    get_timestamp
 )
 from platform import AuthorizeAccess, PlatformSession, platform_status_interpreter
+from research_locations import RES_CODES
+from utils import save2csv
 
 
 # set up logger
-log_file_format = "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(filename)s:%(lineno)d"
 log_console_format = "[%(levelname)s]: %(message)s"
 
 logger = logging.getLogger("my_logger")
@@ -50,48 +58,14 @@ console_handler.setFormatter(logging.Formatter(log_console_format))
 file_handler = RotatingFileHandler(
     ".\\logs\\dedup.log", maxBytes=1024 * 1024, backupCount=10
 )
-file_handler.setFormatter(logging.Formatter(log_file_format))
+formatter = logging.Formatter(
+    "[%(levelname)s] - %(asctime)s - %(name)s - : %(message)s in %(filename)s:%(lineno)d"
+)
+file_handler.setFormatter(formatter)
 
+logger.handlers.clear()
 logger.addHandler(console_handler)
 logger.addHandler(file_handler)
-
-
-def save2csv(dst_fh, row):
-    """
-    Appends a list with data to a dst_fh csv
-    args:
-        dst_fh: str, output file
-        row: list, list of values to write in a row
-    """
-
-    with open(dst_fh, "a") as csvfile:
-        out = csv.writer(
-            csvfile,
-            delimiter=",",
-            lineterminator="\n",
-            quotechar='"',
-            quoting=csv.QUOTE_MINIMAL,
-        )
-        out.writerow(row)
-
-
-def extract_isbns(data):
-    isbns = []
-    for d in data:
-        isbn = d.split(" ")[0].strip()
-        isbns.append(isbn)
-
-    return ",".join(isbns)
-
-
-def parse_bibNo(field):
-    # =945  \\$a.b220317434
-    bibNo = field[1:11]
-    if len(bibNo) != 10:
-        bibNo = None
-    elif bibNo[0] != "b":
-        bibNo = None
-    return bibNo
 
 
 def is_valid_bib_type(rec_type, blvl, item_form):
@@ -102,51 +76,123 @@ def is_valid_bib_type(rec_type, blvl, item_form):
         return False
 
 
-def has_research_callnum(bib):
-    if "852" in bib:
-        return True
-    else:
-        return False
-
-
-def marc2list(src, dst):
-    with open(src, "rb") as f:
-        reader = MARCReader(f)
-        n = 0
-        for bib in reader:
-            n += 1
-            rec_type = bib.leader[6]
-            blvl = bib.leader[7]
-            item_form = bib["008"].data[23]
-            valid = is_valid_bib_type(rec_type, blvl, item_form)
-
-            if valid and not has_research_callnum(bib):
-                try:
-                    bibNo = bib["907"].value()
-                    bibNo = parse_bibNo(bibNo)
-                except AttributeError:
-                    raise (f"record {n} has no sierra bib number")
-
-                isbns = ""
-                isbns_data = []
-                for field in bib.get_fields("020"):
-                    isbns_data.append(field.value())
-                    isbns = extract_isbns(isbns_data)
-
-                save2csv(dst, [bibNo, isbns])
-
-
 def is_ebook(rec_type, blvl, item_form):
     if rec_type == "a" and blvl == "m" and item_form == "o":
         return True
 
 
-def produce_report(dst, matched_records):
+def has_call_number_conflict(call1, call2):
+    if call1 == call2:
+        return False
+    elif call1 is None or call2 is None:
+        return False
+    else:
+        return True
+
+
+def has_title_discrepancies(bib1, bib2):
+    title1 = get_normalized_title(bib1)
+    title2 = get_normalized_title(bib2)
+    if title1 != title2:
+        return True
+    else:
+        return False
+
+
+def determine_records_score(bibs):
+    bib_scores = dict()
+    for bid, bib in bibs.items():
+        logger.debug(f"Analyzing score of bib b{bid}a")
+        score = 0
+        if not is_marked_for_deletion(bib):
+            logger.debug(f"b{bid}a + 1 (not marked for del)")
+            score += 1
+
+        if has_call_number(bib):
+            logger.debug(f"b{bid}a + 1 (has call num)")
+            score += 2
+
+        if has_oclc_number(bib):
+            logger.debug(f"b{bid}a + 1 (has oclc num)")
+            score += 1
+
+        if has_lc_number(bib):
+            logger.debug(f"b{bid}a + 1 (has lc num)")
+            score += 1
+
+        bib_scores[bid] = score
+
+    # # take into consideration record updates
+    # timestamps = dict()
+    # for bid, bib in bibs.items():
+    #     timestamp = get_timestamp(bib)
+    #     timestamps[bid] = timestamp
+
+    # ord_timestamps = sorted(timestamps.values())
+    # newest_timestamp = ord_timestamps[0]
+    # for bid, timestamp in timestamps.items():
+    #     if timestamp == newest_timestamp:
+    #         score = bib_scores[bid]
+    #         bib_scores[bid] = score + 1
+    #         logger.debug(f"b{bid}a + 1 (newest)")
+
+    return bib_scores
+
+
+def highest_score(bib_scores):
+    highest_score = sorted(bib_scores.values(), reverse=True)[0]
+    for k, v in bib_scores.items():
+        if v == highest_score:
+            return k
+
+
+def create_dup_report(dup_bibs):
+
+    logger.info(f"Branch duplicates: {dup_bibs.keys()}")
+    bibs_scores = determine_records_score(dup_bibs)
+    logger.info(f"Records scores : {bibs_scores}")
+    dst_bid = highest_score(bibs_scores)
+    logger.info(f"Best record: b{dst_bid}a")
+
+
+    dst_bib = dup_bibs[dst_bid]
+    dst_callnum = get_branch_call_number(dst_bib)
+    del dup_bibs[dst_bid]
+
+    logger.info(f"Destination bib call number: {dst_callnum}")
+    for bid, bib in dup_bibs.items():
+        callnum = get_branch_call_number(bib)
+        if has_call_number_conflict(dst_callnum, callnum):
+            logger.info(f"Call number conflict: {dst_callnum} vs {callnum}")
+            save2csv(
+                ".\\files\\branch-ord-191201.callnum-conflict.csv",
+                [f"b{dst_bid}a", f"b{bid}a", dst_callnum, callnum],
+            )
+        elif has_title_discrepancies(dst_bib, bib):
+            logger.info(f"Title conflict: b{dst_bid}a-b{bid}a")
+            save2csv(
+                ".\\files\\branch-ord-191201.title-conflict.csv",
+                [f"b{dst_bid}a", f"b{bid}a", dst_callnum, callnum],
+            )
+        else:
+            logger.info(f"Clean duplicates: b{dst_bid}a-b{bid}a")
+            save2csv(
+                ".\\files\\branch-ord-191201.confirmed-branch-dups.csv",
+                [f"b{dst_bid}a", f"b{bid}a", dst_callnum, callnum, "awaiting"],
+            )
+
+
+def has_research_location(record):
+    for loc in get_locations(record):
+        if loc in RES_CODES:
+            return True
+
+
+def parse_results(matched_records):
     # reject bibs with call number issues
     # reject mixed and research bibs
-    branch_matches = []
+    branch_matches = dict()
     matched_bids = []
-    ebooks = []
     for record in matched_records:
         bid = get_bibNo(record)
         rec_type = get_rec_type(record)
@@ -157,26 +203,29 @@ def produce_report(dst, matched_records):
         # check if ebook and save for separate report
         if is_ebook(rec_type, blvl, item_form):
             logger.info(f"Identified ebook: bid: b{bid}a , isbns={isbns}")
-            ebooks.append([bid, ",".join(isbns)])
-
+            save2csv(
+                "./files/branch-ord-191201.ebook-report.csv",
+                [f"b{bid}a", ",".join(isbns)],
+            )
         if not is_valid_bib_type(rec_type, blvl, item_form):
             logger.info(f"Rejecting invalid item format bib b{bid}a")
-        elif not has_research_callnum(record):
-            branch_matches.append(record)
-            matched_bids.append(bid)
+        elif has_research_call_number(record):
+            logger.info(f"Rejecting mixed/research bib b{bid}a (852)")
+        elif has_research_location(record):
+            logger.info(f"Rejecting research bib b{bid}a (location)")
+        elif is_marked_for_deletion(record):
+            logger.info(f"Rejecting marked for deletion bib b{bid}a")
         else:
+            branch_matches[bid] = record
+            matched_bids.append(bid)
 
-            logger.info(f"Rejecting mixed/research bib b{bid}a")
-
-    logger.info(f"Found {len(branch_matches)} branch matches.")
+    logger.info(f"Found {len(matched_bids)} branch matches.")
     if len(branch_matches) > 1:
-        ord_matched_bids = sorted(matched_bids)
-        logger.debug(f"Ordered matches: {ord_matched_bids}")
-
-    # save2csv(dst, [dup_bids, dst_bid, status])
+        create_dup_report(branch_matches)
+        raise Exception("The END")
 
 
-def query_platform(src, dst, token):
+def query_platform(src, token):
     with PlatformSession(
         base_url="https://platform.nypl.org/api/v0.1", token=token
     ) as session:
@@ -186,33 +235,36 @@ def query_platform(src, dst, token):
             for row in reader:
                 sbid = row[0]
                 isbns = row[1].split(",")
-                logger.info(f"{sbid} request for isbns: {isbns}")
-                res = session.query_bibStandardNo(isbns)
-                status = platform_status_interpreter(res)
-                logger.info(f"Platform response for bib {sbid}: {status}")
+                if isbns != [""]:
+                    logger.info(f"{sbid} request for isbns: {isbns}")
+                    res = session.query_bibStandardNo(isbns)
+                    status = platform_status_interpreter(res)
+                    logger.info(f"Platform response for bib {sbid}: {status}")
 
-                matched_bibs = []
-                if status == "hit":
-                    for mbib in res.json()["data"]:
-                        mbid = get_bibNo(mbib)
-                        locs = get_locations(mbib)
-                        logger.debug(
-                            f"Source bib: {sbid}, matched bib: b{mbid}a matched locations: {locs}"
-                        )
+                    matched_bibs = []
+                    if status == "hit":
+                        for mbib in res.json()["data"]:
+                            mbid = get_bibNo(mbib)
+                            locs = get_locations(mbib)
+                            logger.debug(
+                                f"Source bib: {sbid}, matched bib: b{mbid}a matched locations: {locs}"
+                            )
 
-                        matched_bibs.append(mbib)
+                            matched_bibs.append(mbib)
 
-                produce_report(dst, matched_bibs)
+                    parse_results(matched_bibs)
+                else:
+                    logger.info("Skipping query - no ISBN in the source.")
 
 
 if __name__ == "__main__":
     import os
+    from marc_parser import marc2list
 
-    src = "./files/branch-ord-191201.test30.mrc"
-    dst = "./files/branch-ord-191201.csv"
-    report = "./files/branc-ord-191201.report.csv"
+    src = "./files/branch-brief-dups-191201.mrc_clean_rev.mrc"
+    dst = "./files/branch-brief-191201.csv"
     creds_fh = os.path.join(
-        os.environ["USERPROFILE"], ".platform\\tomasz_platform.json"
+        os.environ["USERPROFILE"], ".platform\\bookops_platform.json"
     )
     # marc2list(src, dst)
     with open(creds_fh, "r") as file:
@@ -225,4 +277,4 @@ if __name__ == "__main__":
     )
 
     token = auth.get_token()
-    query_platform(dst, report, token)
+    query_platform(dst, token)

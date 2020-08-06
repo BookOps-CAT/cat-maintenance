@@ -1,0 +1,716 @@
+{
+      "id": "17189814",
+      "nyplSource": "sierra-nypl",
+      "nyplType": "bib",
+      "updatedDate": "2020-08-02T14:03:00-04:00",
+      "createdDate": "2008-12-23T02:49:00-05:00",
+      "deletedDate": null,
+      "deleted": false,
+      "locations": [
+        {
+          "code": "nsj",
+          "name": "96th Street Children"
+        },
+        {
+          "code": "alj",
+          "name": "Allerton Children"
+        },
+        {
+          "code": "blj",
+          "name": "Bloomingdale Children"
+        },
+        {
+          "code": "btj",
+          "name": "Battery Park Children"
+        },
+        {
+          "code": "chj",
+          "name": "Chatham Square Children"
+        },
+        {
+          "code": "dhj",
+          "name": "Dongan Hills Children "
+        },
+        {
+          "code": "eaj",
+          "name": "Eastchester Children"
+        },
+        {
+          "code": "ewj",
+          "name": "Edenwald Children"
+        },
+        {
+          "code": "fwj",
+          "name": "Fort Washington Children"
+        },
+        {
+          "code": "gcj",
+          "name": "Grand Central Children"
+        },
+        {
+          "code": "hlj",
+          "name": "Harlem Children"
+        },
+        {
+          "code": "inj",
+          "name": "Inwood Children"
+        },
+        {
+          "code": "kpj",
+          "name": "Kips Bay Children"
+        },
+        {
+          "code": "ls",
+          "name": "Library Services Center"
+        },
+        {
+          "code": "mlj",
+          "name": "Mulberry Street Children"
+        },
+        {
+          "code": "muj",
+          "name": "Muhlenberg Children"
+        },
+        {
+          "code": "nbj",
+          "name": "West New Brighton Children"
+        },
+        {
+          "code": "rsj",
+          "name": "Riverside Children"
+        },
+        {
+          "code": "saj",
+          "name": "St. Agnes Children"
+        },
+        {
+          "code": "sbj",
+          "name": "South Beach Children"
+        },
+        {
+          "code": "sej",
+          "name": "Seward Park Children"
+        },
+        {
+          "code": "tsj",
+          "name": "Tompkins Square Children"
+        },
+        {
+          "code": "vnj",
+          "name": "Pelham Parkway-Van Nest Children"
+        },
+        {
+          "code": "wbj",
+          "name": "Webster Children"
+        },
+        {
+          "code": "woj",
+          "name": "Woodstock Children"
+        },
+        {
+          "code": "wtj",
+          "name": "Westchester Square Children"
+        },
+        {
+          "code": "yvj",
+          "name": "Yorkville Children"
+        },
+        {
+          "code": "snj",
+          "name": "Stavros Niarchos Foundation Library - Children's Collection"
+        }
+      ],
+      "suppressed": false,
+      "lang": {
+        "code": "eng",
+        "name": "English"
+      },
+      "title": "The lucky lottery",
+      "author": "Roy, Ron, 1940-",
+      "materialType": {
+        "code": "a  ",
+        "value": "BOOK/TEXT"
+      },
+      "bibLevel": {
+        "code": "m",
+        "value": "MONOGRAPH"
+      },
+      "publishYear": 2000,
+      "catalogDate": "2012-09-12",
+      "country": {
+        "code": "nyu",
+        "name": "New York (State)"
+      },
+      "normTitle": "lucky lottery",
+      "normAuthor": "roy ron 1940",
+      "standardNumbers": [
+        "0679894608",
+        "0679994602"
+      ],
+      "controlNumber": "44066905",
+      "fixedFields": {
+        "24": {
+          "label": "Language",
+          "value": "eng",
+          "display": "English"
+        },
+        "25": {
+          "label": "Skip",
+          "value": "4",
+          "display": null
+        },
+        "26": {
+          "label": "Location",
+          "value": "multi",
+          "display": null
+        },
+        "27": {
+          "label": "COPIES",
+          "value": "36",
+          "display": null
+        },
+        "28": {
+          "label": "Cat. Date",
+          "value": "2012-09-12",
+          "display": null
+        },
+        "29": {
+          "label": "Bib Level",
+          "value": "m",
+          "display": "MONOGRAPH"
+        },
+        "30": {
+          "label": "Material Type",
+          "value": "a  ",
+          "display": "BOOK/TEXT"
+        },
+        "31": {
+          "label": "Bib Code 3",
+          "value": "a",
+          "display": null
+        },
+        "80": {
+          "label": "Record Type",
+          "value": "b",
+          "display": null
+        },
+        "81": {
+          "label": "Record Number",
+          "value": "17189814",
+          "display": null
+        },
+        "83": {
+          "label": "Created Date",
+          "value": "2008-12-23T02:49:00Z",
+          "display": null
+        },
+        "84": {
+          "label": "Updated Date",
+          "value": "2020-08-02T14:03:00Z",
+          "display": null
+        },
+        "85": {
+          "label": "No. of Revisions",
+          "value": "1147",
+          "display": null
+        },
+        "86": {
+          "label": "Agency",
+          "value": "1",
+          "display": null
+        },
+        "89": {
+          "label": "Country",
+          "value": "nyu",
+          "display": "New York (State)"
+        },
+        "98": {
+          "label": "PDATE",
+          "value": "2020-07-31T00:50:42Z",
+          "display": null
+        },
+        "107": {
+          "label": "MARC Type",
+          "value": " ",
+          "display": null
+        }
+      },
+      "varFields": [
+        {
+          "fieldTag": "a",
+          "marcTag": "100",
+          "ind1": "1",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "Roy, Ron,"
+            },
+            {
+              "tag": "d",
+              "content": "1940-"
+            }
+          ]
+        },
+        {
+          "fieldTag": "b",
+          "marcTag": "700",
+          "ind1": "1",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "Gurney, John,"
+            },
+            {
+              "tag": "e",
+              "content": "ill."
+            }
+          ]
+        },
+        {
+          "fieldTag": "c",
+          "marcTag": "091",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "p",
+              "content": "J"
+            },
+            {
+              "tag": "f",
+              "content": "YR"
+            },
+            {
+              "tag": "a",
+              "content": "FIC"
+            },
+            {
+              "tag": "c",
+              "content": "ROY"
+            }
+          ]
+        },
+        {
+          "fieldTag": "d",
+          "marcTag": "650",
+          "ind1": " ",
+          "ind2": "0",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "Lotteries"
+            },
+            {
+              "tag": "v",
+              "content": "Fiction."
+            }
+          ]
+        },
+        {
+          "fieldTag": "q",
+          "marcTag": "852",
+          "ind1": "8",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "h",
+              "content": "*QR 01-7495"
+            }
+          ]
+        },
+        {
+          "fieldTag": "d",
+          "marcTag": "655",
+          "ind1": " ",
+          "ind2": "7",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "Detective and mystery fiction."
+            },
+            {
+              "tag": "2",
+              "content": "lcgft"
+            }
+          ]
+        },
+        {
+          "fieldTag": "i",
+          "marcTag": "020",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "0679894608 (pbk.)"
+            }
+          ]
+        },
+        {
+          "fieldTag": "i",
+          "marcTag": "020",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "0679994602 (glb)"
+            }
+          ]
+        },
+        {
+          "fieldTag": "l",
+          "marcTag": "010",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "   00029068"
+            }
+          ]
+        },
+        {
+          "fieldTag": "n",
+          "marcTag": "520",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "Dink and his two friends help Lucky find the culprit who stole Lucky's winning lottery ticket."
+            }
+          ]
+        },
+        {
+          "fieldTag": "o",
+          "marcTag": "001",
+          "ind1": " ",
+          "ind2": " ",
+          "content": "44066905 ",
+          "subfields": null
+        },
+        {
+          "fieldTag": "p",
+          "marcTag": "260",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "New York :"
+            },
+            {
+              "tag": "b",
+              "content": "Random House,"
+            },
+            {
+              "tag": "c",
+              "content": "c2000."
+            }
+          ]
+        },
+        {
+          "fieldTag": "r",
+          "marcTag": "300",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "86 p. :"
+            },
+            {
+              "tag": "b",
+              "content": "ill. ;"
+            },
+            {
+              "tag": "c",
+              "content": "20 cm."
+            }
+          ]
+        },
+        {
+          "fieldTag": "s",
+          "marcTag": "490",
+          "ind1": "0",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "A to Z mysteries"
+            }
+          ]
+        },
+        {
+          "fieldTag": "t",
+          "marcTag": "245",
+          "ind1": "1",
+          "ind2": "4",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "The lucky lottery /"
+            },
+            {
+              "tag": "c",
+              "content": "by Ron Roy ; illustrated by John Steven Gurney."
+            }
+          ]
+        },
+        {
+          "fieldTag": "v",
+          "marcTag": "995",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "1693826"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "003",
+          "ind1": " ",
+          "ind2": " ",
+          "content": "OCoLC",
+          "subfields": null
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "005",
+          "ind1": " ",
+          "ind2": " ",
+          "content": "20060626011727.0",
+          "subfields": null
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "008",
+          "ind1": " ",
+          "ind2": " ",
+          "content": "000313s2000    nyua   j      000 1 eng  pam a ",
+          "subfields": null
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "040",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "DLC"
+            },
+            {
+              "tag": "c",
+              "content": "DLC"
+            },
+            {
+              "tag": "d",
+              "content": "UtOrBLW"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "042",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "lcac"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "050",
+          "ind1": "0",
+          "ind2": "0",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "PZ7.R8139"
+            },
+            {
+              "tag": "b",
+              "content": "Lu 2000"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "908",
+          "ind1": "0",
+          "ind2": "0",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "PZ7.R8139"
+            },
+            {
+              "tag": "b",
+              "content": "Lu 2000"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "082",
+          "ind1": "0",
+          "ind2": "0",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "[Fic]"
+            },
+            {
+              "tag": "2",
+              "content": "21"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "856",
+          "ind1": "4",
+          "ind2": "2",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "3",
+              "content": "Publisher description"
+            },
+            {
+              "tag": "u",
+              "content": "http://www.loc.gov/catdir/description/random0410/00029068.html"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "901",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "BTCLSD120912K"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "945",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": ".o15896444"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "901",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "BTCLSD110323D"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "901",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "BTCLSD100504D"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "901",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "BTCLSD100202D"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "901",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": "rba"
+            }
+          ]
+        },
+        {
+          "fieldTag": "y",
+          "marcTag": "945",
+          "ind1": " ",
+          "ind2": " ",
+          "content": null,
+          "subfields": [
+            {
+              "tag": "a",
+              "content": ".o13707310"
+            }
+          ]
+        },
+        {
+          "fieldTag": "_",
+          "marcTag": null,
+          "ind1": null,
+          "ind2": null,
+          "content": "00000pam  2200361 a 4500",
+          "subfields": null
+        }
+      ]
+    }
