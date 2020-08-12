@@ -41,9 +41,53 @@ def test_get_normalized_title(test_bib):
     assert pbp.get_normalized_title(test_bib) == "lucky lottery"
 
 
-def has_call_number(test_bib):
+def test_has_call_number(test_bib):
     assert pbp.has_call_number(test_bib) is True
 
 
-def has_oclc_number(test_bib):
+def test_has_oclc_number(test_bib):
     assert pbp.has_oclc_number(test_bib) is True
+
+
+def test_is_dlc_record(test_bib):
+    assert pbp.is_dlc_record(test_bib) is True
+
+
+def test_has_lc_number(test_bib):
+    assert pbp.has_lc_number(test_bib) is True
+
+
+def test_is_marked_for_deletion(test_bib):
+    assert pbp.is_marked_for_deletion(test_bib) is False
+
+
+def test_has_national_lib_authentication_code(test_bib):
+    assert pbp.has_national_library_authentication_code(test_bib) is True
+
+
+def test_has_082_tag(test_bib):
+    assert pbp.has_082_tag(test_bib) is True
+
+
+def test_has_subject_tags(test_bib):
+    assert pbp.has_subject_tags(test_bib) is True
+
+
+def test_has_050_tag(test_bib):
+    assert pbp.has_050_tag(test_bib) is True
+
+
+def test_has_505_tag(test_bib):
+    assert pbp.has_505_tag(test_bib) is False
+
+
+def test_has_520_tag(test_bib):
+    assert pbp.has_520_tag(test_bib) is True
+
+
+def test_get_encoding_level(test_bib):
+    assert pbp.get_encoding_level(test_bib) == " "
+
+
+def test_get_timestamp(test_bib):
+    assert pbp.get_timestamp(test_bib) == float("20060626011727.0")

@@ -50,6 +50,13 @@ def get_tag_008(bib):
                 return field.get("content")
 
 
+def get_encoding_level(bib):
+    if bib is not None:
+        leader = get_leader(bib)
+        elvl = leader[17]
+        return elvl
+
+
 def get_item_form(bib=None):
     if bib is not None:
         tag_008 = get_tag_008(bib)
@@ -66,6 +73,64 @@ def get_isbns(bib=None):
         return bib.get("standardNumbers")
 
 
+def has_050_tag(bib=None):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "050":
+                present = True
+                break
+    return present
+
+
+def has_505_tag(bib=None):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "505":
+                present = True
+                break
+    return present
+
+
+def has_520_tag(bib=None):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "520":
+                present = True
+                break
+    return present
+
+
+def has_subject_tags(bib=None):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") in (
+                "600",
+                "610",
+                "611",
+                "630",
+                "650",
+                "651",
+                "655",
+            ):
+                present = True
+                break
+    return present
+
+
+def has_082_tag(bib=None):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "082":
+                present = True
+                break
+    return present
+
+
 def has_research_call_number(bib):
     research = False
     if bib is not None:
@@ -74,6 +139,39 @@ def has_research_call_number(bib):
                 research = True
                 break
     return research
+
+
+def has_branch_call_number(bib):
+    branches = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "091":
+                branches = True
+                break
+    return branches
+
+
+def has_national_library_authentication_code(bib):
+    present = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "042":
+                present = True
+                break
+    return present
+
+
+def is_dlc_record(bib):
+    dlc = False
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "040":
+                for subfield in field.get("subfields"):
+                    if subfield.get("content") == "DLC":
+                        dlc = True
+                        break
+
+    return dlc
 
 
 def get_branch_call_number(bib):
@@ -86,13 +184,33 @@ def get_branch_call_number(bib):
                 return " ".join(segments).upper()
 
 
+def get_oclc_number(bib):
+    oclc_number = None
+    if bib is not None:
+        for field in bib.get("varFields"):
+            if field.get("marcTag") == "001":
+                control_number = field.get("content")
+                try:
+                    oclc_number = str(int(control_number))
+                except ValueError:
+                    pass
+                except TypeError:
+                    pass
+            if field.get("marcTag") == "991":
+                for subfield in field.get("subfields"):
+                    if subfield.get("tag") == "y":
+                        oclc_number == subfield.get("content")
+    return oclc_number
+
+
 def has_call_number(bib):
+    present = False
     if bib is not None:
         for field in bib.get("varFields"):
             if field.get("marcTag") in ("091", "852"):
-                return True
-            else:
-                return False
+                present = True
+                break
+    return present
 
 
 def has_oclc_number(bib):
@@ -102,6 +220,8 @@ def has_oclc_number(bib):
             if field.get("marcTag") == "003":
                 if field.get("content") == "OCoLC":
                     has_number = True
+            if field.get("marcTag") == "991":
+                has_number = True
 
     return has_number
 
@@ -116,12 +236,17 @@ def has_lc_number(bib):
 
 
 def get_timestamp(bib):
+    timestamp = 0.0
     if bib is not None:
         for field in bib.get("varFields"):
             if field.get("marcTag") == "005":
-                return float(field.get("content"))
-            else:
-                return 0.0
+                try:
+                    timestamp = float(field.get("content"))
+                except ValueError:
+                    pass
+                except TypeError:
+                    pass
+    return timestamp
 
 
 def get_normalized_title(bib):

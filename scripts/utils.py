@@ -9,7 +9,7 @@ def save2csv(dst_fh, row):
         row: list, list of values to write in a row
     """
 
-    with open(dst_fh, "a") as csvfile:
+    with open(dst_fh, "a", encoding="utf-8") as csvfile:
         out = csv.writer(
             csvfile,
             delimiter=",",
@@ -17,4 +17,7 @@ def save2csv(dst_fh, row):
             quotechar='"',
             quoting=csv.QUOTE_MINIMAL,
         )
-        out.writerow(row)
+        try:
+            out.writerow(row)
+        except UnicodeEncodeError:
+            pass
