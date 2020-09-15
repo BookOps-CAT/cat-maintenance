@@ -243,7 +243,7 @@ def create_dup_report(dup_bibs):
             logger.info(f"Call number conflict: {dst_callnum} vs {callnum}")
 
             save2csv(
-                ".\\files\\reports\\former-mixed-bibs.REPORT_CALLNUM-CONFLICT.csv",
+                ".\\files\\reports\\brief-bibs.REPORT_CALLNUM-CONFLICT.csv",
                 [f"b{dst_bid}a", f"b{bid}a", dst_callnum, callnum, "awaiting"],
             )
 
@@ -251,14 +251,14 @@ def create_dup_report(dup_bibs):
             logger.info(f"Title conflict: b{dst_bid}a-b{bid}a")
 
             save2csv(
-                ".\\files\\reports\\former-mixed-bibs.REPORT_TITLE-CONFLICT.csv",
+                ".\\files\\reports\\brief-bibs.REPORT_TITLE-CONFLICT.csv",
                 [f"b{dst_bid}a", f"b{bid}a", dst_title, title, "awaiting"],
             )
         else:
             logger.info(f"Clean duplicates: b{dst_bid}a-b{bid}a")
 
             save2csv(
-                ".\\files\\reports\\former-mixed-bibs.REPORT_CONFIRMED-DUPS.csv",
+                ".\\files\\reports\\brief-bibs.REPORT_CONFIRMED-DUPS.csv",
                 [f"b{dst_bid}a", f"b{bid}a", dst_callnum, callnum, "awaiting"],
             )
 
@@ -333,12 +333,13 @@ def parse_results(matched_records):
         if is_ebook(rec_type, blvl, item_form):
             logger.info(f"Identified ebook: bid: b{bid}a , isbns={isbns}")
             save2csv(
-                "./files/reports/former-mixed-bibs.REPORT_EBOOKS.csv",
+                "./files/reports/brief-bibs.REPORT_EBOOKS.csv",
                 [f"b{bid}a", ",".join(isbns)],
             )
         elif library != "branches":
             logger.info(
-                f"Rejecting wrong library bib: b{bid}a identified as {library}.")
+                f"Rejecting wrong library bib: b{bid}a identified as {library}."
+            )
         elif not is_valid_bib_type(rec_type, blvl, item_form):
             logger.info(f"Rejecting invalid item format bib b{bid}a")
         elif is_marked_for_deletion(record):
@@ -390,8 +391,8 @@ if __name__ == "__main__":
     import os
     from marc_parser import marc2list
 
-    src = "./files/src_mrc/msplit00000042.mrc"
-    dst = "./files/src_csv/msplit00000042.csv"
+    src = "./files/src_mrc/brief-order-bibs-jan-mar.mrc_clean_rev.mrc"
+    dst = "./files/src_csv/james2.csv"
     creds_fh = os.path.join(
         os.environ["USERPROFILE"], ".platform\\tomasz_platform.json"
     )
