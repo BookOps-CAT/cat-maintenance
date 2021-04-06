@@ -21,3 +21,8 @@ def save2csv(dst_fh, row):
             out.writerow(row)
         except UnicodeEncodeError:
             pass
+
+
+def save2marc(dst_fh, record):
+    with open(dst_fh, "rb") as marcfile:
+        marcfile.write(record.as_marc())
