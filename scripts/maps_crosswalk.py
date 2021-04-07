@@ -4,7 +4,7 @@ Crosswalk between map csv data and MARC21
 
 from collections import namedtuple
 import csv
-from datetime import datetime
+from datetime import datetime, date
 
 from pymarc import Record, Field
 
@@ -55,6 +55,13 @@ def norm_scale(scale):
         return "Scale not given"
 
 
+def encode_pub_year(pub_year):
+    if not pub_year:
+        return "    "
+    else:
+        return pub_year
+
+
 def norm_pub_date(pub_date):
     if not pub_date:
         return ["date of publication not identified"]
@@ -77,13 +84,13 @@ def construct_subject_subfields(s):
     if subZs:
         for subZ in subZs:
             subfields.extend(["z", subZ])
-    subfields.extend(["v", subV])
+    subfields.extend(["v", f"{subV}."])
     return subfields
 
 
 def encode_subjects(sub_str):
     fields = []
-    subjects = sub_str.split("--")
+    subjects = sub_str.split(";")
     for s in subjects:
         subfields = construct_subject_subfields(s)
         fields.append(Field(tag="650", indicators=[" ", "0"], subfields=subfields))
@@ -93,12 +100,12 @@ def encode_subjects(sub_str):
 def make_bib(row: namedtuple, sequence: int):
     bib = Record()
     # leader
-    bib.leader = "00000cem a2200000Ma 4500"
+    bib.leader = "00000cem i2200000Ma 4500"
 
     tags = []
 
     # 001 tag
-    tags.append(Field(tag="001", data=f"fldmap-{sequence}"))
+    tags.append(Field(tag="001", data=f"bkops{sequence}"))
 
     # 003 tag
     tags.append(Field(tag="003", data="BookOps"))
@@ -117,6 +124,12 @@ def make_bib(row: namedtuple, sequence: int):
         )
     )
 
+    # 008 tag
+    dateCreated = date.strftime(date.today(), "%y%m%d")
+    pub_year = encode_pub_year(row.pub_year)
+    data = f"{dateCreated}s{pub_year}    xx |||||| a  |  |   und d"
+    tags.append(Field(tag="008", data=data))
+
     # 034 tag
 
     esc = encode_scale(row.scale)
@@ -130,7 +143,7 @@ def make_bib(row: namedtuple, sequence: int):
     tags.append(
         Field(
             tag="110",
-            indicators=["1" " "],
+            indicators=["1", " "],
             subfields=["a", f"{row.author},", "e", "cartographer."],
         )
     )
@@ -170,6 +183,37 @@ def make_bib(row: namedtuple, sequence: int):
         )
     )
 
+    # tag 300
+    tags.append(
+        Field(
+            tag="300",
+            indicators=[" ", " "],
+            subfields=["a", "1 folded map :", "b", "color"],
+        )
+    )
+
+    tags.append(
+        Field(
+            tag="336",
+            indicators=[" ", " "],
+            subfields=["a", "cartographic image", "b", "cri", "2", "rdacontent"],
+        )
+    )
+    tags.append(
+        Field(
+            tag="337",
+            indicators=[" ", " "],
+            subfields=["a", "unmediated", "b", "n", "2", "rddcontent"],
+        )
+    )
+    tags.append(
+        Field(
+            tag="338",
+            indicators=[" ", " "],
+            subfields=["a", "sheet", "b", "nb", "2", "rdacontent"],
+        )
+    )
+
     # 490 tag
     if row.series:
         tags.append(
@@ -194,9 +238,25 @@ def make_bib(row: namedtuple, sequence: int):
         subject_fields = encode_subjects(row.subjects)
         tags.extend(subject_fields)
 
+    # 655 tag
+    if row.genre:
+        tags.append(
+            Field(
+                tag="655",
+                indicators=[" ", "7"],
+                subfields=["a", f"{row.genre}.", "2", "lcgft"],
+            )
+        )
+
+    # tag 852
+    if row.call_number:
+        tags.append(
+            Field(tag="852", indicators=["8", " "], subfields=["h", row.call_number])
+        )
+
     for t in tags:
         bib.add_ordered_field(t)
-    print(bib)
+    return bib
 
 
 def source_reader(fh: str):
@@ -210,7 +270,9 @@ def create_bibs(src_fh: str, out_fh: str, start_sequence: int):
     sequence = start_sequence
     for row in reader:
         s = determine_sequence(sequence)
-        make_bib(row, s)
+        bib = make_bib(row, s)
+        print(bib)
+        save2marc(out_fh, bib)
         sequence += 1
 
 
