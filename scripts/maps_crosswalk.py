@@ -100,7 +100,7 @@ def encode_subjects(sub_str):
 def make_bib(row: namedtuple, sequence: int):
     bib = Record()
     # leader
-    bib.leader = "00000cem i2200000Ma 4500"
+    bib.leader = "00000cem a2200000Mi 4500"
 
     tags = []
 
@@ -117,12 +117,7 @@ def make_bib(row: namedtuple, sequence: int):
 
     # 007 tag
 
-    tags.append(
-        Field(
-            tag="007",
-            data="aj canzn",
-        )
-    )
+    tags.append(Field(tag="007", data="aj canzn",))
 
     # 008 tag
     dateCreated = date.strftime(date.today(), "%y%m%d")
