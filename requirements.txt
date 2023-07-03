@@ -1,10 +1,16 @@
 attrs==22.1.0
+bookops-nypl-platform @ git+https://github.com/bookops-cat/bookops-nypl-platform@0dfc74ea3e54e1e151489e88ce006162f621c0e4
+certifi==2023.5.7
+charset-normalizer==3.1.0
 colorama==0.4.6
 exceptiongroup==1.0.4
+idna==3.4
 iniconfig==1.1.1
 packaging==21.3
 pluggy==1.0.0
 pymarc==4.2.1
 pyparsing==3.0.9
 pytest==7.2.0
+requests==2.31.0
 tomli==2.0.1
+urllib3==2.0.3
